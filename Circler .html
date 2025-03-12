@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crazy Canvas (Relearning canvas)</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #f4f4f4; }
+        canvas { display: block; background: white; z-index: 100; }
+        h1 {
+           
+            opacity: 0.7;
+            font-size: 16px;
+            background-color: transparent;
+        }
+        .box, .box2 {
+            height: 35px;
+            width: 100%;
+            border: 2px solid black;
+            background-color: rgba(95, 158, 160, 0.374);
+            position: absolute;
+            top: 43%;
+            z-index: 0;
+        }
+        .box2 {
+            height: 100%;
+            width: 35px;
+            left: 43%;
+            top: 0;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+    <body>
+        <h1 >Circler <span id="title"></span></h1>
+        <canvas id="myAppCanvas" width="600" height="600" style="border: 1px solid;"></canvas>
+        <div class="box"></div>
+        <div class="box2"></div>
+        <input id="Ncount" placeholder="Number of circles" />
+        <input id="ChangeShap" placeholder="Shape Spread" />
+        <script>
+            let N =  50
+            let Spread =  1
+            const { width, height } = myAppCanvas
+            const ctx = myAppCanvas.getContext('2d')
+            ctx.translate(width/2, height/2)
+
+            Ncount.addEventListener('input', (e) => {
+                N = e.target.value
+            })
+            ChangeShap.addEventListener('input', (e) => {
+                Spread = e.target.value
+            })
+            animate()
+
+            function animate(){
+                ctx.clearRect(-width / 2, -height / 2, width, height)
+
+                for (let i=0; i < N; i++){
+                    const s = Spread + Math.sin(Date.now() / 1000) ** 2
+                    const offset = Date.now() / 1000 + s * i * Math.PI / N
+                    const x = Math.sin(offset) * width/2
+                    title.innerHTML = `x: ${x}`
+                    ctx.save()
+                    ctx.rotate(i * Math.PI / N)
+                    drawCircle(x, 0)
+                    if (i % 2 == 0){
+                        drawCircle(x, 0, 10)
+                    }
+                    if (i % 13 == 0){
+                        ctx.strokeStyle = 'red'
+                        ctx.fillStyle = 'blue'
+                    ctx.fill()
+                    drawCircle(x, 0, 5)
+                    }
+                    if (i % 5 == 0){
+                        ctx.strokeStyle = 'yellow'
+                        ctx.fillStyle = 'red'
+                    ctx.fill()
+                    drawCircle(x, 0, 5)
+                    }
+                    if (i % 15 == 0){
+                        ctx.strokeStyle = 'green'
+                        ctx.fillStyle = 'yellow'
+                    ctx.fill()
+                    drawCircle(x, 0, 5)
+                    }
+                    if (N/2 == i){
+                        ctx.strokeStyle = 'blue'
+                        ctx.fillStyle = 'blue'
+                        ctx.fill()
+                        drawCircle(x, 0, 30)
+                    }
+
+                    ctx.restore()
+                }
+                requestAnimationFrame(animate)
+            }
+
+            function drawCircle(x,y, radius=20){
+                ctx.beginPath()
+                ctx.arc(x, y, radius, 0,  Math.PI * 2)
+                ctx.stroke()
+            }
+            
+        </script>
+    </body>
+</html>
